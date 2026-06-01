@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const title = 'Iniciar Sesión - AXION Services AI';
+const description = 'Inicia sesión en tu cuenta de AXION.';
+const lang = 'es';
+---
+
+<BaseLayout title={title} description={description} lang={lang}>
+  <Header />
+  <main class="min-h-screen bg-gray-50 py-20">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
+        <h1 class="text-2xl font-bold text-center mb-8 text-dark">Iniciar Sesión</h1>
+        
+        <form id="signin-form" class="space-y-6">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required 
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-copper focus:border-copper"
+            >
+          </div>
+          
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              required 
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-copper focus:border-copper"
+            >
+          </div>
+          
+          <button 
+            type="submit" 
+            class="w-full bg-brand-red text-white py-2 px-4 rounded-md hover:bg-brand-red-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
+          >
+            Iniciar Sesión
+          </button>
+        </form>
+        
+        <p class="mt-6 text-center text-sm text-gray-600">
+          ¿No tienes una cuenta? 
+          <a href="/es/signup" class="text-copper hover:text-copper-hover font-medium">Regístrate</a>
+        </p>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { supabase } from '../../lib/supabase';
+
+  const form = document.getElementById('signin-form');
+  
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = (document.getElementById('email') as HTMLInputElement).value;
+    const password = (document.getElementById('password') as HTMLInputElement).value;
+    
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        alert('Error al iniciar sesión: ' + error.message);
+      } else {
+        alert('¡Sesión iniciada exitosamente!');
+        window.location.href = '/es';
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Ocurrió un error. Por favor, inténtalo de nuevo.');
+    }
+  });
+</script>
